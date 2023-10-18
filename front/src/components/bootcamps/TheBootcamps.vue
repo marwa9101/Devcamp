@@ -1,21 +1,14 @@
 <template>
   <base-card>
-    <base-button
-      @click="setSelectedTab('all-bootcamps')"
-      :mode="allBootcampsBtnMode"
-      ><router-link to="/bootcamps" :class="allBootcampsBtnClicked"
-        >All bootcamps</router-link
-      ></base-button
-    >
-    <base-button
-      @click="setSelectedTab('add-bootcamp')"
-      :mode="addBootcampBtnMode"
-      ><router-link to="/new-bootcamp" :class="addBootcampBtnClicked"
-        >Add a bootcamp</router-link
-      ></base-button
-    >
+    <router-link to="/bootcamps" :class="allBootcampsBtnClicked">
+      <base-button @click="setSelectedTab('all-bootcamps')" :mode="allBootcampsBtnMode">All bootcamps</base-button>
+    </router-link>
+    <router-link to="/new-bootcamp" :class="addBootcampBtnClicked">
+      <base-button @click="setSelectedTab('add-bootcamp')" :mode="addBootcampBtnMode">Add a bootcamp</base-button>
+    </router-link>
   </base-card>
 </template>
+
 
 <script>
 export default {

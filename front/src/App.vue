@@ -5,8 +5,9 @@
 </template>
 
 <script>
-import HeaderComponent from './components/layouts/HeaderComponent.vue';
-import TheBootcamps from './components/bootcamps/TheBootcamps.vue';
+import HeaderComponent from '../src/components/layouts/HeaderComponent.vue';
+import TheBootcamps from '../src/components/bootcamps/TheBootcamps.vue';
+
 
 export default {
   components: {
