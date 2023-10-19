@@ -1,17 +1,29 @@
 <template>
   <base-card>
-    <router-link to="/bootcamps" :class="allBootcampsBtnClicked">
-      <base-button @click="setSelectedTab('all-bootcamps')" :mode="allBootcampsBtnMode">All bootcamps</base-button>
-    </router-link>
-    <router-link to="/new-bootcamp" :class="addBootcampBtnClicked">
-      <base-button @click="setSelectedTab('add-bootcamp')" :mode="addBootcampBtnMode">Add a bootcamp</base-button>
-    </router-link>
+    <base-button
+      @click="getAllBootcamps('all-bootcamps')"
+      :mode="allBootcampsBtnMode"
+      >All bootcamps</base-button
+    >
+    <base-button
+      @click="setSelectedTab('add-bootcamp')"
+      :mode="addBootcampBtnMode"
+      >Add a bootcamp</base-button
+    >
   </base-card>
+  <component :is="selectedTab"></component>
 </template>
 
-
 <script>
+import AddBootcamp from './AddBootcamp.vue';
+import AllBootcamps from './AllBootcamps.vue';
+import axios from 'axios';
+
 export default {
+  components: {
+    AddBootcamp,
+    AllBootcamps,
+  },
   data() {
     return {
       selectedTab: '',
@@ -39,19 +51,72 @@ export default {
     },
   },
   methods: {
+    getAllBootcamps(tab) {
+      this.selectedTab = tab;
+      axios
+        .get('http://localhost:5000/api/v1/bootcamps')
+        .then((response) => {
+          const boots = response.data.data;
+          boots.forEach((boot) => {
+            const bootcampExists = this.bootcamps.some((bootcamp) => {
+              return bootcamp.id === boot.id;
+            });
+            if (!bootcampExists) {
+              this.bootcamps.push(boot);
+            }
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     setSelectedTab(tab) {
       this.selectedTab = tab;
     },
-    addNewBootcamp(name, description, website, phone, email) {
+    addNewBootcamp(name, description, website, phone, email, address) {
       const newBootcamp = {
-        id: new Date().toISOString(),
         name: name,
         description: description,
         website: website,
         phone: phone,
         email: email,
+        address: address,
       };
+      const token =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkN2E1MTRiNWQyYzEyYzc0NDliZTA0NSIsImlhdCI6MTY5NzcxOTg3MiwiZXhwIjoxNzAwMzExODcyfQ.w5HioSXhxMG_N9BYzbP0Ho6q9bMf3-eRzlJ11MM2_do';
+      // Configuration de l'en-tête d'autorisation
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      // Configuration de la requête Axios
+      const config = {
+        headers: headers,
+      };
+      axios
+        .post('http://localhost:5000/api/v1/bootcamps', newBootcamp, config)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       this.bootcamps.push(newBootcamp);
+      axios
+        .get('http://localhost:5000/api/v1/bootcamps')
+        .then((response) => {
+          const boots = response.data.data;
+          boots.forEach((boot) => {
+            const bootcampExists = this.bootcamps.some((bootcamp) => {
+              return bootcamp.id === boot.id;
+            });
+            if (!bootcampExists) {
+              this.bootcamps.push(boot);
+            }
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       this.selectedTab = 'all-bootcamps';
     },
   },
