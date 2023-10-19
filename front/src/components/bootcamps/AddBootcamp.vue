@@ -9,7 +9,7 @@
         <h2>New Bootcamp Creation</h2>
       </div>
     </div>
-    <form v-on:submit.prevent="aNewBootcamp">
+    <form v-on:submit.prevent="newBootcamp">
       <div class="form-complete">
         <div class="form-controls">
           <div class="controls-form-top">
@@ -123,14 +123,16 @@ export default {
     return {};
   },
   methods: {
-    aNewBootcamp() {
+    newBootcamp() {
+
       const name = this.$refs.bootcampName.value;
       const description = this.$refs.bootcampDescription.value;
       const website = this.$refs.bootcampWebsite.value;
       const phone = this.$refs.bootcampPhone.value;
       const email = this.$refs.bootcampEmail.value;
+      const address = this.$refs.bootcampAddress.value;
 
-      this.addNewBootcamp(name, description, website, phone, email);
+      this.addNewBootcamp(name, description, website, phone, email, address);
     },
   },
 };

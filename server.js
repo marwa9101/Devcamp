@@ -8,21 +8,24 @@ const cookieParser = require('cookie-parser');
 const errorHandler = require('./middlwares/error');
 const connectDB = require('./config/db');
 const path = require('path');
+const cors = require('cors');
 
 // Load env vars
-dotEnv.config({path: './config/config.env'});
+dotEnv.config({ path: './config/config.env' });
 
 //connect to database
 connectDB();
 
 const app = express();
 
+app.use(cors());
+
 // Body Parser middleware
 app.use(express.json());
 
 // Dev logging middlware (just in dev environnement)
 if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
+  app.use(morgan('dev'));
 }
 
 // File uploading
@@ -42,17 +45,21 @@ const coursesRoutes = require('./routes/courses routes');
 const authRoutes = require('./routes/auth routes');
 app.use('/api/v1/bootcamps', bootcampsRoutes);
 app.use('/api/v1/courses', coursesRoutes);
-app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/auth', authRoutes);
 
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
-    console.log(`server running on ${process.env.NODE_ENV} mode on Port ${PORT}`.yellow.bold);
+  console.log(
+    `server running on ${process.env.NODE_ENV} mode on Port ${PORT}`.yellow.bold
+  );
 });
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
-    console.log(`Error: ${err.message}`.red);
-    server.close(() => {process.exit(1)});
-})
+  console.log(`Error: ${err.message}`.red);
+  server.close(() => {
+    process.exit(1);
+  });
+});
